@@ -1,0 +1,1167 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Car Management API",
+        "description": "Современное API для управления автомобилями с возможностью совместного использования. Построено на Laravel с использованием Clean Architecture, Repository Pattern и Service Layer.",
+        "contact": {
+            "name": "API Support",
+            "email": "admin@example.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api",
+            "description": "Локальный сервер разработки"
+        },
+        {
+            "url": "http://api.test29.test/api",
+            "description": "Сервер разработки (Herd)"
+        }
+    ],
+    "paths": {
+        "/auth/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Регистрация нового пользователя",
+                "description": "Создает нового пользователя в системе",
+                "operationId": "ed42f392010c301892e640067141676e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Иван Иванов"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "ivan@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Пользователь успешно зарегистрирован",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Регистрация прошла успешно"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Иван Иванов"
+                                                        },
+                                                        "email": {
+                                                            "type": "string",
+                                                            "example": "ivan@example.com"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": "1|abc123..."
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Ошибка при регистрации"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации данных",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Вход в систему",
+                "description": "Аутентификация пользователя и получение токена",
+                "operationId": "8cb7742ae98d0990acb2907c4e00bf24",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "ivan@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Успешный вход",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Вход выполнен успешно"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Иван Иванов"
+                                                        },
+                                                        "email": {
+                                                            "type": "string",
+                                                            "example": "ivan@example.com"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": "1|abc123..."
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неверные учетные данные",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Неверный email или пароль"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации данных",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Выход из системы",
+                "description": "Удаление токена аутентификации",
+                "operationId": "0d29c740dc06d77602af8095bf4654cc",
+                "responses": {
+                    "200": {
+                        "description": "Успешный выход",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Выход выполнен успешно"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Пользователь не аутентифицирован",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/auth/me": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Получить профиль пользователя",
+                "description": "Возвращает информацию о текущем аутентифицированном пользователе",
+                "operationId": "a9c495788506b114956e3f509e5d90a2",
+                "responses": {
+                    "200": {
+                        "description": "Данные пользователя",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Данные пользователя получены успешно"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Иван Иванов"
+                                                        },
+                                                        "email": {
+                                                            "type": "string",
+                                                            "example": "ivan@example.com"
+                                                        },
+                                                        "email_verified_at": {
+                                                            "type": "string",
+                                                            "nullable": true
+                                                        },
+                                                        "created_at": {
+                                                            "type": "string",
+                                                            "format": "date-time"
+                                                        },
+                                                        "updated_at": {
+                                                            "type": "string",
+                                                            "format": "date-time"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Пользователь не аутентифицирован",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/car-brands": {
+            "get": {
+                "tags": [
+                    "Car Brands"
+                ],
+                "summary": "Получить список всех брендов автомобилей",
+                "description": "Возвращает список всех доступных брендов автомобилей",
+                "operationId": "fda74e95605e4174c25d0edcbf86dc91",
+                "responses": {
+                    "200": {
+                        "description": "Список брендов автомобилей",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/CarBrand"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cars/{id}/attach": {
+            "post": {
+                "tags": [
+                    "Cars"
+                ],
+                "summary": "Прикрепить автомобиль к текущему пользователю",
+                "description": "Добавляет связь между автомобилем и текущим пользователем",
+                "operationId": "333abd43f75f474a99a3b6923928e459",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID автомобиля",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Автомобиль успешно прикреплен",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Car attached successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Не авторизован"
+                    },
+                    "404": {
+                        "description": "Автомобиль не найден"
+                    },
+                    "409": {
+                        "description": "Автомобиль уже прикреплен"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/cars/{id}/detach": {
+            "delete": {
+                "tags": [
+                    "Cars"
+                ],
+                "summary": "Открепить автомобиль от текущего пользователя",
+                "description": "Удаляет связь между автомобилем и текущим пользователем",
+                "operationId": "6414b1cfa5b7a70ab648f06000a6fb85",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID автомобиля",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Автомобиль успешно откреплен",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Car detached successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Не авторизован"
+                    },
+                    "404": {
+                        "description": "Автомобиль не найден или не прикреплен"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/cars/{id}/users": {
+            "get": {
+                "tags": [
+                    "Cars"
+                ],
+                "summary": "Получить список пользователей автомобиля",
+                "description": "Возвращает всех пользователей, которые имеют доступ к автомобилю",
+                "operationId": "23d4b32a179ee2d66ad1bca7f7b4776a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID автомобиля",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Список пользователей автомобиля",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "car": {
+                                                    "$ref": "#/components/schemas/Car"
+                                                },
+                                                "users": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/User"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Не авторизован"
+                    },
+                    "403": {
+                        "description": "Доступ запрещен"
+                    },
+                    "404": {
+                        "description": "Автомобиль не найден"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/cars/{id}/share": {
+            "post": {
+                "tags": [
+                    "Cars"
+                ],
+                "summary": "Поделиться автомобилем с другим пользователем",
+                "description": "Добавляет другого пользователя к автомобилю для совместного использования",
+                "operationId": "cfc2681441dae917e58f23aec46e48ba",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID автомобиля",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_email"
+                                ],
+                                "properties": {
+                                    "user_email": {
+                                        "description": "Email пользователя для добавления",
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "friend@example.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Автомобиль успешно расшарен",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Car shared successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Не авторизован"
+                    },
+                    "403": {
+                        "description": "Доступ запрещен"
+                    },
+                    "404": {
+                        "description": "Автомобиль или пользователь не найден"
+                    },
+                    "409": {
+                        "description": "Пользователь уже имеет доступ к автомобилю"
+                    },
+                    "422": {
+                        "description": "Ошибка валидации"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/car-models": {
+            "get": {
+                "tags": [
+                    "Car Models"
+                ],
+                "summary": "Получить список моделей автомобилей",
+                "description": "Возвращает список моделей автомобилей, опционально отфильтрованный по бренду",
+                "operationId": "5b6904ee22a16bfcd84dcc15725630b6",
+                "parameters": [
+                    {
+                        "name": "car_brand_id",
+                        "in": "query",
+                        "description": "ID бренда для фильтрации моделей",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Список моделей автомобилей",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/CarModel"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Car": {
+                "title": "Автомобиль",
+                "description": "Модель автомобиля",
+                "properties": {
+                    "id": {
+                        "description": "ID автомобиля",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "car_brand_id": {
+                        "description": "ID бренда",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "car_model_id": {
+                        "description": "ID модели",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "year": {
+                        "description": "Год выпуска",
+                        "type": "string",
+                        "example": "2020",
+                        "nullable": true
+                    },
+                    "color": {
+                        "description": "Цвет",
+                        "type": "string",
+                        "example": "Красный",
+                        "nullable": true
+                    },
+                    "mileage": {
+                        "description": "Пробег",
+                        "type": "integer",
+                        "example": 50000,
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "description": "Дата создания",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Дата обновления",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "car_brand": {
+                        "$ref": "#/components/schemas/CarBrand"
+                    },
+                    "car_model": {
+                        "$ref": "#/components/schemas/CarModel"
+                    },
+                    "users": {
+                        "description": "Пользователи, связанные с автомобилем",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/User"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "CarBrand": {
+                "title": "Бренд автомобиля",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Toyota"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "CarModel": {
+                "title": "Модель автомобиля",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "car_brand_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Camry"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "car_brand": {
+                        "$ref": "#/components/schemas/CarBrand"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "title": "Пользователь",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Иван Иванов"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "ivan@example.com"
+                    },
+                    "email_verified_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "CarCreateRequest": {
+                "title": "Запрос создания автомобиля",
+                "required": [
+                    "car_brand_id",
+                    "car_model_id"
+                ],
+                "properties": {
+                    "car_brand_id": {
+                        "description": "ID бренда автомобиля",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "car_model_id": {
+                        "description": "ID модели автомобиля",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "year": {
+                        "description": "Год выпуска",
+                        "type": "string",
+                        "example": "2020",
+                        "nullable": true
+                    },
+                    "color": {
+                        "description": "Цвет",
+                        "type": "string",
+                        "example": "Красный",
+                        "nullable": true
+                    },
+                    "mileage": {
+                        "description": "Пробег",
+                        "type": "integer",
+                        "example": 50000,
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "CarUpdateRequest": {
+                "title": "Запрос обновления автомобиля",
+                "properties": {
+                    "car_brand_id": {
+                        "description": "ID бренда автомобиля",
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    },
+                    "car_model_id": {
+                        "description": "ID модели автомобиля",
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    },
+                    "year": {
+                        "description": "Год выпуска",
+                        "type": "string",
+                        "example": "2021",
+                        "nullable": true
+                    },
+                    "color": {
+                        "description": "Цвет",
+                        "type": "string",
+                        "example": "Синий",
+                        "nullable": true
+                    },
+                    "mileage": {
+                        "description": "Пробег",
+                        "type": "integer",
+                        "example": 60000,
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "ApiResponse": {
+                "title": "Стандартный ответ API",
+                "properties": {
+                    "success": {
+                        "description": "Успешность операции",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "description": "Сообщение",
+                        "type": "string",
+                        "example": "Операция выполнена успешно"
+                    },
+                    "data": {
+                        "description": "Данные ответа",
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "ValidationError": {
+                "title": "Ошибка валидации",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "The given data was invalid."
+                    },
+                    "errors": {
+                        "type": "object",
+                        "example": {
+                            "email": [
+                                "The email field is required."
+                            ]
+                        },
+                        "additionalProperties": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "RegisterRequest": {
+                "title": "Запрос регистрации",
+                "required": [
+                    "name",
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "Имя пользователя",
+                        "type": "string",
+                        "example": "Иван Иванов"
+                    },
+                    "email": {
+                        "description": "Email пользователя",
+                        "type": "string",
+                        "format": "email",
+                        "example": "ivan@example.com"
+                    },
+                    "password": {
+                        "description": "Пароль (минимум 8 символов)",
+                        "type": "string",
+                        "format": "password",
+                        "example": "password123"
+                    }
+                },
+                "type": "object"
+            },
+            "LoginRequest": {
+                "title": "Запрос авторизации",
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "description": "Email пользователя",
+                        "type": "string",
+                        "format": "email",
+                        "example": "ivan@example.com"
+                    },
+                    "password": {
+                        "description": "Пароль",
+                        "type": "string",
+                        "format": "password",
+                        "example": "password123"
+                    }
+                },
+                "type": "object"
+            },
+            "AuthResponse": {
+                "title": "Ответ аутентификации",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Регистрация прошла успешно"
+                    },
+                    "data": {
+                        "properties": {
+                            "user": {
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Иван Иванов"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "ivan@example.com"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            "token": {
+                                "description": "API токен",
+                                "type": "string",
+                                "example": "1|abc123def456..."
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "CarShareRequest": {
+                "title": "Запрос предоставления доступа к автомобилю",
+                "required": [
+                    "user_email"
+                ],
+                "properties": {
+                    "user_email": {
+                        "description": "Email пользователя для предоставления доступа",
+                        "type": "string",
+                        "format": "email",
+                        "example": "friend@example.com"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "description": "Введите токен в формате: Bearer {your-token}",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authentication",
+            "description": "Аутентификация пользователей"
+        },
+        {
+            "name": "Cars",
+            "description": "Управление автомобилями"
+        },
+        {
+            "name": "Car Brands",
+            "description": "Справочник брендов автомобилей"
+        },
+        {
+            "name": "Car Models",
+            "description": "Справочник моделей автомобилей"
+        }
+    ]
+}
