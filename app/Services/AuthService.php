@@ -9,13 +9,13 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-class AuthService
+readonly class AuthService
 {
     /**
      * @param UserService $userService
      */
     public function __construct(
-        private readonly UserService $userService
+        private UserService $userService
     ) {
     }
     /**

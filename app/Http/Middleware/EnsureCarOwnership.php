@@ -19,7 +19,6 @@ class EnsureCarOwnership
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Получаем ID автомобиля из параметров маршрута
         $carId = $request->route('car');
 
         if (!$carId) {
@@ -29,7 +28,6 @@ class EnsureCarOwnership
             ], 400);
         }
 
-        // Ищем автомобиль в базе данных
         $car = Car::find($carId);
 
         if (!$car) {
@@ -39,7 +37,6 @@ class EnsureCarOwnership
             ], 404);
         }
 
-        // Проверяем, что автомобиль связан с текущим пользователем
         $user = Auth::user();
         if (!$user->cars()->where('car_id', $car->id)->exists()) {
             return response()->json([
@@ -48,7 +45,6 @@ class EnsureCarOwnership
             ], 403);
         }
 
-        // Добавляем автомобиль в запрос для использования в контроллере
         $request->attributes->set('car', $car);
 
         return $next($request);

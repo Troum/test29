@@ -6,23 +6,12 @@ use App\Models\Car;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
-/**
- * Сервис для управления совместным использованием автомобилей
- * 
- * Обеспечивает функциональность:
- * - Проверка прав доступа к автомобилю
- * - Прикрепление/открепление автомобилей к пользователям
- * - Предоставление доступа к автомобилю другим пользователям
- * - Получение списка пользователей автомобиля
- */
-class CarOwnershipService
+readonly class CarOwnershipService
 {
     /**
-     * Проверяет, имеет ли пользователь доступ к автомобилю
-     *
-     * @param Car $car Автомобиль для проверки
-     * @param User|null $user Пользователь (если не указан, используется текущий)
-     * @return bool true если у пользователя есть доступ
+     * @param Car $car
+     * @param User|null $user
+     * @return bool
      */
     public function hasAccess(Car $car, ?User $user = null): bool
     {
@@ -51,7 +40,6 @@ class CarOwnershipService
             ];
         }
 
-        // Проверяем, не прикреплен ли уже автомобиль к этому пользователю
         if ($this->hasAccess($car, $user)) {
             return [
                 'success' => false,
@@ -59,7 +47,6 @@ class CarOwnershipService
             ];
         }
 
-        // Прикрепляем автомобиль к пользователю
         $user->cars()->attach($car->id);
 
         return [

@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property-read Collection<User> $users
  * @method static create(...$args)
  * @method static where(...$args)
+ * @method static find(...$args)
  */
 class Car extends Model
 {

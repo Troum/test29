@@ -10,32 +10,27 @@ use Illuminate\Database\Seeder;
 class CarSeeder extends Seeder
 {
     /**
-     * Заполняет таблицу автомобилей тестовыми данными
+     * @return void
      */
     public function run(): void
     {
-        // Получаем доступные бренды и модели
         $brands = CarBrand::with('carModels')->get();
-        
+
         if ($brands->isEmpty()) {
             $this->command->error('Нет доступных брендов автомобилей. Запустите CarBrandSeeder и CarModelSeeder сначала.');
             return;
         }
 
-        // Создаем 20 автомобилей с различными характеристиками
         $colors = ['Белый', 'Черный', 'Серый', 'Красный', 'Синий', 'Зеленый', 'Желтый', 'Серебристый'];
         $years = ['2018-01-01', '2019-01-01', '2020-01-01', '2021-01-01', '2022-01-01', '2023-01-01', '2024-01-01'];
 
         foreach (range(1, 20) as $i) {
-            // Выбираем случайный бренд
             $brand = $brands->random();
-            
-            // Проверяем, есть ли модели у этого бренда
+
             if ($brand->carModels->isEmpty()) {
                 continue;
             }
-            
-            // Выбираем случайную модель этого бренда
+
             $model = $brand->carModels->random();
 
             Car::create([

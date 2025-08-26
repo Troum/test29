@@ -6,8 +6,9 @@ use App\Contracts\BaseRepositoryInterface;
 use App\Contracts\BaseServiceInterface;
 use App\Repositories\UserRepository;
 use Illuminate\Database\Eloquent\Model;
+use Throwable;
 
-class UserService implements BaseServiceInterface
+readonly class UserService implements BaseServiceInterface
 {
     /**
      * @param UserRepository $userRepository
@@ -34,8 +35,6 @@ class UserService implements BaseServiceInterface
     }
 
     /**
-     * Find user by email
-     *
      * @param string $email
      * @param array $relations
      * @return mixed
@@ -49,6 +48,7 @@ class UserService implements BaseServiceInterface
 
     /**
      * @inheritDoc
+     * @throws Throwable
      */
     public function createOne(array $data): mixed
     {
@@ -57,6 +57,7 @@ class UserService implements BaseServiceInterface
 
     /**
      * @inheritDoc
+     * @throws Throwable
      */
     public function updateOne(Model $model, array $data): mixed
     {
@@ -65,6 +66,7 @@ class UserService implements BaseServiceInterface
 
     /**
      * @inheritDoc
+     * @throws Throwable
      */
     public function deleteOne(Model $model, bool $force = false): mixed
     {

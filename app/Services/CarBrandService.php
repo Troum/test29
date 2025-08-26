@@ -6,7 +6,7 @@ use App\Contracts\BaseRepositoryInterface;
 use App\Contracts\BaseServiceInterface;
 use Illuminate\Database\Eloquent\Model;
 
-class CarBrandService implements BaseServiceInterface
+readonly class CarBrandService implements BaseServiceInterface
 {
     /**
      * @param BaseRepositoryInterface $carBrandRepository
